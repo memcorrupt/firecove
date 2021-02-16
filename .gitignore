@@ -1,3 +1,7 @@
+#Firecove Data Files
+config.json
+historical.json
+
 # Logs
 logs
 *.log
