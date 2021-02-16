@@ -1,0 +1,17 @@
+{
+    "ovh": {
+        "endpoint": "OVH_ENDPOINT_HERE",
+        "appKey": "OVH_CONSUMER_SECRET_HERE",
+        "appSecret": "OVH_APP_SECRET_HERE",
+        "consumerSecret": "OVH_CONSUMER_SECRET_HERE"
+    },
+    "ips": {
+        "10.0.0.1/32": [
+            "10.0.0.1"
+        ],
+        "10.0.0.2/31": [
+            "10.0.0.2",
+            "10.0.0.3"
+        ]
+    }
+}
