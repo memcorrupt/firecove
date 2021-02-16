@@ -12,10 +12,18 @@ WARNING: This script is meant to be used in conjunction with software, such as [
 2. Navigate to the directory of the cloned repository.
 3. Ensure node.js is installed, and execute `npm install` in your terminal.
 4. Check your current software firewall for any rules that must be mirrored to OVH's firewall settings.
-5. Configure the config.json file.
-6. Create an OVH firewall for every IP you are securing.
-7. Run the script (and optionally, add it to crontab to run at least weekly, but no more than once per hour)
-8. Mirror any necessary firewall changes, and enable the OVH firewall for every IP you have secured on the configuration.
+5. Copy `config.json.example` to `config.json`.
+6. Generate OVH API credentials from one of the below links, and place it into the respective areas of the config.json.
+7. Place your IP address subnets + IP addresses into the respective areas of the config.json.
+8. Create an OVH firewall for every IP you are securing.
+9. Run the script (and optionally, add it to crontab to run at least weekly, but no more than once per hour)
+10. Mirror any necessary firewall changes, and enable the OVH firewall for every IP you have secured on the configuration.
+
+## OVH Endpoints
+Depending on which OVH region you use, you will have to use one of the following URLs, and set the endpoint configuration option to one of these values. This script is not compatible with Kimsufi, or SoYouStart servers.
+[OVH Europe](https://eu.api.ovh.com/createToken/?GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A&POST=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&DELETE=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A): `ovh-eu`
+[OVH US](https://api.us.ovhcloud.com/createToken/?GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A&POST=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&DELETE=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A): `ovh-us`
+[OVH North-America](https://ca.api.ovh.com/createToken/?GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A&POST=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&DELETE=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A): `ovh-ca`
 
 ## Contact
 You can contact me via email at mem[at]mem[dot]rip. Support is not guaranteed.
