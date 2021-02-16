@@ -21,8 +21,12 @@ WARNING: This script is meant to be used in conjunction with software, such as [
 
 ## OVH Endpoints
 Depending on which OVH region you use, you will have to use one of the following URLs, and set the endpoint configuration option to one of these values. This script is not compatible with Kimsufi, or SoYouStart servers.
+
+
 [OVH Europe](https://eu.api.ovh.com/createToken/?GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A&POST=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&DELETE=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A): `ovh-eu`
+
 [OVH US](https://api.us.ovhcloud.com/createToken/?GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A&POST=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&DELETE=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A): `ovh-us`
+
 [OVH North-America](https://ca.api.ovh.com/createToken/?GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&GET=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A&POST=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule&DELETE=%2Fip%2F%2A%2Ffirewall%2F%2A%2Frule%2F%2A): `ovh-ca`
 
 ## Contact
