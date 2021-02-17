@@ -61,11 +61,19 @@ async function getFirewallEntries(encodedRange, encodedIp){
     }catch(err){
         if(err.error == 404)
             throw new Error(`Could not configure firewall for ${encodedIp}: A firewall does not exist for this IP address. Please create one via the OVH manager.`);
+        else
+            throw err;
     }
     
     let promises = [];
     for(const seq of firewallIds)
-        promises.push(ovh.requestPromised("GET", `/ip/${encodedRange}/firewall/${encodedIp}/rule/${encodeURIComponent(seq)}`));
+        promises.push(ovh.requestPromised("GET", `/ip/${encodedRange}/firewall/${encodedIp}/rule/${encodeURIComponent(seq)}`)
+            .catch(e => {
+                if(e.message.endsWith(") is not unique"))
+                    throw new Error(`Could not configure firewall for ${encodedIp}: This firewall is malformed. Please contact OVH support to have it reset.`);
+                else
+                   throw e;
+            }));
 
     return Promise.all(promises);
 }
@@ -74,7 +82,7 @@ async function processIp(cfIps, history, range, ip){
     let encodedRange = encodeURIComponent(range);
     let encodedIp = encodeURIComponent(ip);
     const firewallData = await getFirewallEntries(encodedRange, encodedIp);
-    
+
     const promises = [];
     const addRule = (data) => {
         promises.push(ovh.requestPromised("POST", `/ip/${encodedRange}/firewall/${encodedIp}/rule`, data));
@@ -83,27 +91,47 @@ async function processIp(cfIps, history, range, ip){
         promises.push(ovh.requestPromised("DELETE", `/ip/${encodedRange}/firewall/${encodedIp}/rule/${seq}`));
     }
 
+    let hasPending = firewallData.find(rule => rule.state != "ok");
+    if(hasPending)
+        throw new Error(`Could not configure firewall for ${encodedIp}: This firewall is currently provisioning changes. Please wait 2 minutes. Please do not attempt to bypass this error, else your firewall rules may end up in an unfixable state.`);
+
     const eligibleIps = firewallData.map(rule => rule.source);
     for(const rule of eligibleIps)
         if(cfIps.includes(rule.source) && (rule.action !== "permit" || rule.protocol !== "ipv4"))
             throw new Error(`Could not configure firewall for ${encodedIp}: A rule exists for a Cloudflare IP, but is not a permit IPv4 rule.`);
 
     const usedIndices = firewallData.map(rule => rule.sequence);
-    const indices = [...Array(19).keys()].filter(i => !usedIndices.includes(i));
+    const indices = [...Array(18).keys()].filter(i => !usedIndices.includes(i));
     const toAdd = cfIps.filter(ip => !eligibleIps.includes(ip));
     const toRemove = firewallData
         .filter(rule => history.includes(rule.source) && !cfIps.includes(rule.source))
         .map(rule => rule.sequence)
         .forEach(removeRule);
 
-    const lastRule = firewallData.find(rule => rule.sequence == 19);
-    if(!lastRule){
+    const allowEstablished = firewallData.find(rule => rule.sequence == 18);
+    if(!allowEstablished){
+        addRule({
+            action: "permit",
+            protocol: "tcp",
+            tcpOption: {
+                option: "established"
+            },
+            sequence: 18
+        });
+    }else if(
+        allowEstablished.action !== "permit" 
+        || allowEstablished.source !== "any" || allowEstablished.protocol !== "tcp"  || allowEstablished.tcpOption !== "established" 
+        || allowEstablished.sourcePort != null || allowEstablished.destinationPort != null)
+        throw new Error(`Could not configure firewall for ${encodedIp}: Rule with sequence 18 exists, and is not an allow established TCP`);
+
+    const denyIncoming = firewallData.find(rule => rule.sequence == 19);
+    if(!denyIncoming){
         addRule({
             action: "deny",
             protocol: "ipv4",
             sequence: 19
         });
-    }else if(lastRule.action !== "deny" || lastRule.source !== "any" || lastRule.protocol !== "ipv4")
+    }else if(denyIncoming.action !== "deny" || denyIncoming.source !== "any" || denyIncoming.protocol !== "ipv4")
         throw new Error(`Could not configure firewall for ${encodedIp}: Rule with sequence 19 exists, and is not a block IPv4 from all IPs.`);
 
     for(const [index, cfIp] of toAdd.entries()){
