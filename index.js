@@ -27,7 +27,7 @@ function fetchHistoricalIps(){
     return new Promise((resolve, reject) => {
         fs.readFile("historical.json", "utf8", (err, data) => {
             if(err)
-                return err.code == "ENOENT" ? resolve({}) : reject(err);
+                return err.code == "ENOENT" ? resolve([]) : reject(err);
             
             let json;
             try{
