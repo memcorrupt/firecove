@@ -7,6 +7,8 @@ WARNING: This script gives Cloudflare IP ranges access to **any** port on your o
 
 WARNING: This script is meant to be used in conjunction with software, such as [cloudflare-ufw](https://github.com/Paul-Reed/cloudflare-ufw). If you do not configure a software firewall, any attacker with an OVH hosted server will still be able to send requests to your origin server.
 
+WARNING: **This script will stop UDP connections from working on your server, unless you add additional firewall rules to allow them. Services such as NTP and DNS will not work. As an alternative, you can configure these services to use servers inside OVH's network.**
+
 ## How to use
 1. Clone this repository.
 2. Navigate to the directory of the cloned repository.
