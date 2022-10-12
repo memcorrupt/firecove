@@ -1,4 +1,6 @@
 # Firecove
+### **[Cloudflare Tunnels](https://blog.cloudflare.com/tunnel-for-everyone/) may be a better solution than this, as it creates an outgoing connection only tunnel to Cloudflare, effectively making it that you no longer have to punch holes in your firewall for Cloudflare to connect.**
+
 Configure OVH firewall to automatically only allow traffic from Cloudflare ranges. This script does not completely remove the risk of DDoS attacks. It just makes it much easier to do so, using Cloudflare's suite of security tools.
 
 WARNING: Ensure you configure all your software firewall rules on the OVH website, else you will be unable to access your other services in accordance with your current software firewall rules. **Do not deploy to production without testing, unless you know what you're doing**. I'm not responsible for any downtime you may experience as a result of this script.
